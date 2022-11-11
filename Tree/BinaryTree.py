@@ -36,7 +36,12 @@ struct Node {
  struct node *left;
  struct node *right;
 };
- 
+# class node{
+# 	public:
+# 	int data;
+# 	node* left;
+# 	node* right;
+# };
 // function to create a new node
 Node *newNode(int data) {
  //allocating space for the node
