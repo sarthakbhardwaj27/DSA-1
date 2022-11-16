@@ -167,7 +167,23 @@ int heightoftree(node* curr)
 }
 int diameteroftree(node* curr)
 {
+	//diameter is the longest distance betwenn any 2 nodes in a tree
+	//there are two cases 
+	//case 1 - longest path passes through root node
+	//case 2 = longest path does not pass through root node
 	
+	//approach 1 - o(n^2)
+	//1) calculate the maximum diameter of left subtree
+	//2) calculate the maximum diamter of right subtree
+	//3) calculate the left height from root node and right height from root node +1
+	//do a max of the 3 values
+	if(curr==NULL)
+		return 0;
+	int diam1 = diameteroftree(curr->left);
+	int diam2 = diameteroftree(curr->right);
+	int diam3 = heightoftree(curr->left)+heightoftree(curr->right)+1;
+	
+	return max(max(diam1,diam2),max(diam2,diam3));
 }
 int main()
 {
