@@ -35,3 +35,38 @@ That means bit[12] wo;; contain the sum of the range 12 1100x
 
 -----------------------------------------
 OPERATIONS OF FENWICK TREE
+
+the two main operations supported by Fenwick tree are: 
+1. getSum(x) - this operation returns the sum of first "x" elements of the arrya i.e. a[0]+...+a[x]
+2. update(x,val) - this operation updates the value of "a" at index "x" i.e. a[x] = val;
+3. getSumRange(left,right) - this operation returns the sum of array elements within a rnage [left,right] getSum(x). It can be easily calculated using getSum(x) operation by returning getSum(right+1)-getSum(left)
+ we can also find the sum of any arbitraty range [left,right] using the below given function which usees getSum(x) to find the same.       
+                                       
+--------------------------------------------
+HOW DOES FENWICK TREE WORK?
+
+FINDING THE LEAST SIGNIFICANT SET BIT OF “x”
+
+x>0
+we can express it in the binary form of “a1b” where a is any arbitrary binary string consisting of both 1s and 0s. and b is a binary string of all 0s because 1 is the last set bit present in the binary representation of x.                                        
+
+for example the binary representation of 20 is 010100, if we write this in the form of “a1b” then “a” will be 010 and “b” will 100
+we have studied that in binary form (-x) represented as 2’s compliment of x and 2’s complement of x is equal to x’+1. Now since x = a1b ⇒ x’ = a’0b’. 
+
+Since b had contained all 0’s so b’ will be all 1’s. Adding 1 to a’0b’ will make it a’1b. 
+
+For example, 20 ⇒ (010100)base2 will give a = 010 and b = 00
+x’ = (101011)base2
+we can clearly see now a1b contains all a =010 and it is of the form b = 00 with x’ = (101011)base2 and b’=11.
+-x = x’+1 = (101011)base2  + (1)base2 = (101100)base2
+                                       
+hence it is of the form a'1b, now if we take "and" of x and -x we will get something of the form (p1q)base2 where p and q are binary strings with all 0's i.e. a number with only one set bit because a&a' = 0 and b are already zero
+
+To remove the least significant set-bit from a'1b we can subtract the result obtained of and from x.
+for example: 
+
+x=20 and x&(-x) = 4  ⇒ x - (x&(-x)) = 16 which is the same number that could be obtained by removing the least significant bit of 20.
+
+As discussed in the previous sections we will not be representing the fenwick tree in a “tree like structure” instead we will represent it as an array of size n+1 for any given array of size n to maintain 1-based indexing.
+                                       
+                                       
