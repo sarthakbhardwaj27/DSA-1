@@ -69,4 +69,24 @@ x=20 and x&(-x) = 4  ⇒ x - (x&(-x)) = 16 which is the same number that could b
 
 As discussed in the previous sections we will not be representing the fenwick tree in a “tree like structure” instead we will represent it as an array of size n+1 for any given array of size n to maintain 1-based indexing.
                                        
+--------------getSum(x) operation
+
+it returns the sum of arrau elemtns from x index to xth index i.e. a[0]+a[1]+…+a[x]
+
+- inititalize answer, ans to 0
+- increase x by 1 (to maintain 1-based indexing)
+- while x is greater than 0
+    ans+=bit[x]
+    x-=(x&(-x))                                       
+
+---------------update(x,val) operation
+
+it updates the value of array x = 20 at index x&(-x)=4 to ⇒ after updating , we also need to update 20 array at those indeixes which get impacted by the element at index x, steps are:                                       
+- Find the change happening at the index x, δval=val−a[x].
+- Update the value at index x i.e. a[x]=val.
+- While x≤n
+    - bit[x]+=δval
+    - x+=(x&(-x))                                       
+                                       
+                                       
                                        
