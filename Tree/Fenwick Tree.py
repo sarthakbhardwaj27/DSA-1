@@ -87,6 +87,210 @@ it updates the value of array x = 20 at index x&(-x)=4 to ⇒ after updating , w
 - While x≤n
     - bit[x]+=δval
     - x+=(x&(-x))                                       
+------------------------------------------                                       
+ WHEN TO USE FENWICK TREE?
+
+they are mostly used when we have been given an aray “a” and we need to answer multiple getSum queries i.e. finding the sum of first x elements many times or/and we need to find the sum of a range of elements many times, and also we need to perform multiple update operations i.e. updating the value of “a” at any particular index x
+--------------------------------------------
+CONSTRUCT OF FENWICK TREE
+
+array “a”, size “n”
+
+create another aaray of size n+1 say “bit” inititate with “0”. Then we will use the update function for each index of array “a”,
+
+--------------pseudocode
+
+buildBIT(a[], n){
+    bit=new int[n+1]
+    For i=0 to n:
+        bit[i]=0
+    For i=0 to n:
+        update(i, a[i])
+}
+
+
+let a = 4,2,1,5,6,3,9,7,2,3
+
+bit = 4,6,1,12,6,9,9,37,2,5
+
+where bit[i] represents sum of range (i-2^(x-1)+1)→i
+---------------------------------------
+IMPLEMENTATION
+
+To implement the **Fenwick tree (BIT)** we will have the following global variables to maintain simplicity in the code.
+
+- **n-** It denotes the size of the array on which we want to perform certain operations which are discussed in the previous sections.
+- **bit-** It is the actual binary indexed tree that is represented in array format. Its size will be n+1 to maintain 1-based indexing.
+
+The functions which are needed to implement functionalities of the binary indexed trees are :
+
+- **FindSum-** It takes one argument (say ind) and we need to return the sum of values of the given array (say a) in the range [0, ind].
+- **SumOfRange-** It takes two arguments (say left and right) and we will return the sum of values of a in the range [left, right]
+- **Update-** It takes two arguments (sat ind and val) and we need to change the value of a at index ind to val and correspondingly we also need to update the bit.                                      
+        
+-------------------------------------------   
+PSEUDOCODE
+                                      
+// n denotes the size of 'a' and bit represents 
+// array implementation of Fenwick tree.
+n, a[], bit[]
+
+function FindSum ( ind ):
+    // Initializing sum as 0.
+    sum = 0
+    
+    // Iterate while the index
+    // is in the range of array.
+    While( ind > 0):
+        // Increase the sum.
+        sum += bit[ind]
+        // Updating the index.
+        ind -= (ind&(-ind))
+    
+    Return sum
+    
+end function
+
+function SumRange ( left, right ):
+
+    // Returning sum of the range 
+    // [0, right] - [0, left-1].
+    // Passing right+1 and left because of 
+    // 1 based indexing.
+    
+    Return FindSum (right + 1) - FindSum (left)
+    
+end function
+
+function Update ( ind, val ):
+
+    // Calculating 'delta' that is the change
+    // in value.
+    delta = val - a[ind]
+    a[ind] = val
+    
+    // Increasing the index by 1 
+    // to maintain 1 based indexing.
+    ind = ind + 1
+    
+    // Iterating till index is 
+    // in the range of the array.
+    While ( ind <= n ):
+        // Adding delta to bit[ind].
+        bit[ind] += delta
+        // Updating the index.
+        ind += (ind&(-ind))
+    
+end function        
+-------------------------------------------------------------------------                                       
+fENWICK IMPLEMENTATION USING C/C++                                       
+                                       
+// C++ program to implement
+// Binary Indexed Tree (Fenwick Tree)
+#include<bits/stdc++.h>
+using namespace std;
+
+// BIT array - It stores the prefix
+// sum of the array. 
+int *bit;
+int n;
+
+// Utility function to update the 
+// bit array.
+void updateUtil(int ind, int delta){
+    // Increasing the index by 1 
+    // to maintain 1 based indexing.
+    ind++;
+    // Iterating till index is 
+    // in the range of the array.
+    while(ind<=n){
+        
+        // Adding delta to bit[ind].
+        bit[ind]+=delta;
+        // Updating the index.
+        ind+=(ind&-ind);
+    }
+}
+
+// Function to build the 
+// BIT array initially.
+void buildBIT(int *a, int n){
+    // Declaring of size n+1 becuase, 
+    // It uses 1 based indexing. 
+    bit=new int[n+1];
+    for(int i=0;i<=n;i++)
+        bit[i]=0;
+    // Calling the updateUtil Function
+    // for every index of the array a.
+    for(int i=0;i<n;i++)
+        updateUtil(i, a[i]);
+}
+
+// Function to Update the array.
+void update(int *a, int ind, int val) {
+    // Calculating 'delta' that is the change
+    // in value.
+    int delta=val-a[ind];
+    a[ind]=val;
+    // Calling the updateUtil function 
+    // to update the bit array.
+    updateUtil(ind, delta);
+}
+
+// Function to find the sum of array 
+//  elements in the range [0, ind].
+int findSum(int ind){
+    // Initializing sum as 0.
+    int sum=0;
+    // Iterating while the index
+    // is in the range of the array.
+    while(ind>0){
+        // Increasing the sum.
+        sum+=bit[ind];
+        // Updating the index.
+        ind-=(ind&(-ind));
+    }
+    // Returning sum.
+    return sum;
+}
+
+// Function to find the sum of a range.
+int sumRange(int left, int right) {
+    // Returning sum of the range 
+    // [0, right] - [0, left-1].
+    // Passing right+1 and left because of 
+    // 1 based indexing.
+    return findSum(right+1)-(findSum(left));
+}
+
+// Main Function
+int main(){
+    n=10;
+    int a[]={4,2,1,5,6,3,9,7,2,3};
+    buildBIT(a, n);
+    cout<<"Sum of range 2-6 is "<<sumRange(2, 6);
+    update(a, 5, 12);
+    cout<<"\nSum of range 5-9 is "<<sumRange(5, 9);
+    return 0;
+}
+-----------------------------------------------------------------------                                       
+                                       
+APPLICATION OF FENWICK TREE
+                                       
+-Fenwick Tree is mainly used to optimize the process of finding the prefix sum of the arrays such that we can have the prefix sum of an array index in logarithmic time complexity. However, there are some popular questions that can be efficiently solved using Fenwick trees:
+- Mutable Range Sum Queries: Q queries can be answered in O(Q\times \log{n})O(Q×logn) time which is way better than O(Q\times N)O(Q×N) run-time of brute force approach.
+- Count Inversions in an Array: The number of inversions can easily be found in O(n\times \log{n})O(n×logn) time even without sorting the array.
+- Count smaller numbers after self: Many practical uses can be seen in the real world which can be computed efficiently using BIT.                                       
+                                       
+---------------------------------------------------------                                       
+CONCLUSION                                       
+                                       
+- Binary Indexed Tree (Fenwick Tree) is an efficient data structure that can be used to quickly calculate the prefix sum of an array.
+- If the values present in the array are mutable i.e.i.e. values can be changed using the Fenwick tree is of great use.
+- Subtracting x\&(-x)x&(−x) from xx, is the efficient way to remove the least significant set-bit from xx.
+- Time Complexity to calculate prefix sum or range sum of the array of size nn is O(log(n))O(log(n)) and O(n)O(n) extra space is required to store the bitbit array.                                       
+                                       
+                                       
                                        
                                        
                                        
